@@ -1,16 +1,27 @@
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { getBalance } from 'wagmi/actions';
+import { getConfig } from '@/config/wagmi';
+import { useQueries } from '@tanstack/react-query';
 import { useTokenPrices } from '../../../../hooks/useTokenPrices';
 import { chainIds, SUPPORTED_TOKENS, tokenIds } from '@/config/constants';
 
-export function useTokenBalances() {
+export const useTokenBalances = () => {
   const { address, isConnected } = useAccount();
   const tokenPrices = useTokenPrices(isConnected, tokenIds.join(','));
 
-  const balancesQuery = SUPPORTED_TOKENS.map((token) => ({
-    ...useBalance({ address: token.address || address, chainId: chainIds[`${token.network}`] }),
-  }));
+  const balanceQueries = useQueries({
+    queries: SUPPORTED_TOKENS.map((token) => ({
+      queryKey: ['balance', token.address || address, token.network],
+      queryFn: () =>
+        getBalance(getConfig(), {
+          address: token.address || address!,
+          chainId: chainIds[token.network],
+        }),
+      enabled: isConnected,
+    })),
+  });
 
-  const tokenBalances = balancesQuery.map(({ data }, index) => {
+  const tokenBalances = balanceQueries.map(({ data }, index) => {
     const token = SUPPORTED_TOKENS[index];
     const price = tokenPrices?.[token.id]?.usd || 0;
     const amount = data ? Number(data.formatted) : 0;
@@ -30,4 +41,4 @@ export function useTokenBalances() {
     tokenBalances,
     totalValue: tokenBalances.reduce((acc, token) => acc + token.usdValue, 0),
   };
-}
+};

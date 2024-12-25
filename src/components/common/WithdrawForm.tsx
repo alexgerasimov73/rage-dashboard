@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from './Button';
 import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Button } from './Button';
+import { RadioGroup } from './RadioGroup';
 import { SingleSelect } from './SingleSelect';
 import { getDataForSelect } from '@/utils/utils';
-import { RadioGroup } from './RadioGroup';
 import { Network } from '@/config/types';
 import { TOKENS } from '@/config/constants';
 
@@ -28,12 +28,7 @@ interface Props {
 }
 
 export const WithdrawForm = ({ amount, chain, symbol }: Props) => {
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>();
+  const { control, handleSubmit, register } = useForm<FormData>();
   const watchedAmount = useWatch({
     control,
     name: 'amount',

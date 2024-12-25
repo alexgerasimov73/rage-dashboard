@@ -1,15 +1,11 @@
-interface Column {
-  readonly title: string;
-  readonly render: React.ReactNode | ((row: any) => React.ReactNode);
-  readonly width?: string;
+import { CommonTable } from '@/config/types';
+
+interface TableProps<T> {
+  readonly columns: CommonTable<T>[];
+  readonly data: T[];
 }
 
-interface TableProps {
-  readonly columns: Column[];
-  readonly data: Record<string, any>[];
-}
-
-export const Table = ({ columns, data }: TableProps) => {
+export const Table = <T,>({ columns, data }: TableProps<T>) => {
   return (
     <table className="w-full border-collapse">
       <thead>

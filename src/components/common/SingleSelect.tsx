@@ -61,3 +61,5 @@ export const SingleSelect = memo(({ className, data, value, onChange }: Props) =
     </div>
   );
 });
+
+SingleSelect.displayName = 'SingleSelect';

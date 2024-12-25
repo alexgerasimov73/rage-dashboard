@@ -42,7 +42,7 @@ export const HyperliquidTable = () => {
   if (!hyperliquidData.length)
     return (
       <div className="flex items-center justify-center w-full my-20">
-        No balances to display. It seems you haven't used Hyperliquid yet.
+        No balances to display. It seems you haven&#39;t used Hyperliquid yet.
       </div>
     );
 
