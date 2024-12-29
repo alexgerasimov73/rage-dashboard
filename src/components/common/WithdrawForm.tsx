@@ -22,22 +22,25 @@ const options = [
 ];
 
 interface Props {
-  readonly amount?: number;
+  readonly availableAmount?: number;
   readonly chain?: Network;
   readonly symbol?: string;
 }
 
-export const WithdrawForm = ({ amount, chain, symbol }: Props) => {
-  const { control, handleSubmit, register } = useForm<FormData>();
+export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    register,
+  } = useForm<FormData>({ defaultValues: { network: chain, token: symbol } });
   const watchedAmount = useWatch({
     control,
     name: 'amount',
-    defaultValue: '',
   });
   const watchedToken = useWatch({
     control,
     name: 'token',
-    defaultValue: symbol,
   });
 
   const handleFinish = ({ address, amount, network, token }: FormData) => {
@@ -55,7 +58,7 @@ export const WithdrawForm = ({ amount, chain, symbol }: Props) => {
         <Controller
           control={control}
           name="network"
-          render={({ field: { value = chain, onChange } }) => (
+          render={({ field: { value, onChange } }) => (
             <RadioGroup value={value} options={options} name="Network" onChange={onChange} />
           )}
         />
@@ -65,38 +68,56 @@ export const WithdrawForm = ({ amount, chain, symbol }: Props) => {
           className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6"
           placeholder="Address"
           autoComplete="off"
-          required
-          {...register('address', { required: 'Address is required!' })}
+          {...register('address', {
+            required: 'Address is required',
+            pattern: {
+              value: /^0x[a-fA-F0-9]{40}$/,
+              message: 'Invalid Ethereum address',
+            },
+          })}
         />
+        {errors.address && <span className="text-red">{errors.address.message}</span>}
 
         <div className="flex gap-2">
           <Controller
             control={control}
             name="token"
-            render={({ field: { value = symbol, onChange } }) => (
+            render={({ field: { value, onChange } }) => (
               <SingleSelect
                 className="w-24"
                 data={getDataForSelect(TOKENS)}
-                value={value || ''}
+                value={value}
                 onChange={onChange}
               />
             )}
           />
 
-          <input
-            className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6"
-            placeholder="Amount"
-            autoComplete="off"
-            type="number"
-            required
-            {...register('amount', { required: 'Address is required!' })}
-          />
+          <div className="flex flex-col gap-2 w-full">
+            <input
+              className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6"
+              autoComplete="off"
+              placeholder="Amount"
+              required
+              {...register('amount', {
+                required: 'Enter the amount',
+                validate: {
+                  positive: (value) => parseFloat(value) > 0 || 'Should be greater than 0',
+                  lessThanAvailableAmount: (value) =>
+                    !availableAmount ||
+                    Number(value) <= availableAmount ||
+                    'Exceeds available amount',
+                },
+              })}
+            />
+            {errors.amount && <span className="text-red">{errors.amount.message}</span>}
+          </div>
         </div>
+
         <div className="flex justify-center py-2 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary">
-          Available {amount ?? ''}
+          Available {availableAmount ?? ''}
         </div>
         <Button className="w-full mt-2" type="submit">
-          {watchedAmount ? `Withdraw ${watchedToken}${watchedAmount}` : 'Withdraw'}
+          {watchedAmount ? `Withdraw ${watchedToken} ${watchedAmount}` : 'Withdraw'}
         </Button>
       </form>
     </div>

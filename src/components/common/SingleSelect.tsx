@@ -22,8 +22,6 @@ export const SingleSelect = memo(({ className, data, value, onChange }: Props) =
 
   useOutsideClick(ref, handleCloseSelect, isOpened);
 
-  const foundValue = data.find((item) => item.value === value)?.value;
-
   const handleSelectClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsOpened((isOpened) => !isOpened);
@@ -42,7 +40,7 @@ export const SingleSelect = memo(({ className, data, value, onChange }: Props) =
           className || ''
         }`}
         onClick={handleSelectClick}>
-        {foundValue ? `${foundValue}` : <span className="truncate">Click for select</span>}
+        {value || 'Click for select'}
         <AltArrowDown />
       </button>
 

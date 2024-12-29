@@ -34,11 +34,11 @@ export const RadioGroup = ({ options, name, value, onChange }: RadioGroupProps) 
             selectedValue === option.value ? option.activeStyles : ''
           }`}>
           <input
-            type="radio"
-            name={name}
-            value={option.value}
             className="hidden"
             checked={selectedValue === option.value}
+            name={name}
+            type="radio"
+            value={option.value}
             onChange={handleChange(option.value)}
           />
           {option.label}
