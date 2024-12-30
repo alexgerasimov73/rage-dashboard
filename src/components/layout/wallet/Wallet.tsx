@@ -5,11 +5,11 @@ import { ConnectWallet } from './ConnectWallet';
 import { ConnectedWallet } from './ConnectedWallet';
 
 export const Wallet = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, isConnecting, isReconnecting } = useAccount();
 
-  if (!isConnected) {
-    return <ConnectWallet isHeader />;
-  }
+  if (isConnecting || isReconnecting) return null;
+
+  if (!isConnected) return <ConnectWallet isHeader />;
 
   return <ConnectedWallet />;
 };

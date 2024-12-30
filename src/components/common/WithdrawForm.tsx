@@ -1,12 +1,14 @@
 'use client';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
+// import { type BaseError, useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
 import { Button } from './Button';
 import { RadioGroup } from './RadioGroup';
 import { SingleSelect } from './SingleSelect';
 import { getDataForSelect } from '@/utils/utils';
 import { Network } from '@/config/types';
 import { TOKENS } from '@/config/constants';
+// import { parseEther } from 'viem';
 
 interface FormData {
   readonly address: string;
@@ -42,12 +44,17 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
     control,
     name: 'token',
   });
+  // const { data: hash, error, isPending, sendTransaction } = useSendTransaction();
+  // const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  //   hash,
+  // });
 
   const handleFinish = ({ address, amount, network, token }: FormData) => {
     console.log('address', address);
     console.log('amount', amount);
     console.log('network', network);
     console.log('token', token);
+    // sendTransaction({ to: address, value: parseEther(amount) });
   };
 
   return (
