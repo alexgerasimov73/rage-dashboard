@@ -72,7 +72,7 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
 
         <hr className="border-b-bg-2 border-dashed" />
         <input
-          className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6"
+          className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary transition hover:bg-gray-8 focus:border-gray-6 focus:outline-none"
           placeholder="Address"
           autoComplete="off"
           {...register('address', {
@@ -101,7 +101,7 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
 
           <div className="flex flex-col gap-2 w-full">
             <input
-              className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6"
+              className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary transition hover:bg-gray-8 focus:border-gray-6 focus:outline-none"
               autoComplete="off"
               placeholder="Amount"
               required
@@ -121,7 +121,7 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
         </div>
 
         <div className="flex justify-center py-2 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary">
-          Available {availableAmount ?? ''}
+          Available {availableAmount ?? '...'}
         </div>
         <Button className="w-full mt-2" type="submit">
           {watchedAmount ? `Withdraw ${watchedToken} ${watchedAmount}` : 'Withdraw'}

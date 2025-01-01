@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 import numeral from 'numeral';
 import { useTotalValues } from './useTotalValues';
 import { DOLLAR_PATTERN } from '@/config/constants';
+import { Hyperliquid } from '@/assets/icons';
 
 export const useTags = () => {
   const { connector } = useAccount();
@@ -36,7 +37,12 @@ export const useTags = () => {
     },
     {
       key: 'hyperliquid',
-      label: 'Hyperliquid',
+      label: () => (
+        <div className="flex items-center gap-2">
+          <Image src={Hyperliquid} width={20} height={20} alt="Hyperliquid" />
+          Hyperliquid
+        </div>
+      ),
       path: '/hyperliquid',
       totalValue: numeral(totalHyperliquidValue).format(DOLLAR_PATTERN),
     },

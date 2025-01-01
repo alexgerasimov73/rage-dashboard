@@ -2,6 +2,7 @@ import { useAccount } from 'wagmi';
 import numeral from 'numeral';
 import { useTotalValues } from '../../../hooks/useTotalValues';
 import { DOLLAR_PATTERN } from '@/config/constants';
+import { Hyperliquid } from '@/assets/icons';
 
 export const useBalanceTableData = () => {
   const { connector } = useAccount();
@@ -17,7 +18,7 @@ export const useBalanceTableData = () => {
     },
     {
       name: 'Hyperliquid',
-      icon: '',
+      icon: Hyperliquid,
       allocation: numeral((totalHyperliquidValue / totalValue) * 100).format(DOLLAR_PATTERN),
       balance: numeral(totalHyperliquidValue).format(DOLLAR_PATTERN),
       chains: 'ARB',

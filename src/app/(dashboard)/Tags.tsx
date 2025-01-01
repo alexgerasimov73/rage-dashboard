@@ -20,7 +20,7 @@ export const Tags = () => {
       {tags.map((tag) => (
         <Button
           key={tag.key}
-          className={`flex gap-1 p-2 border border-gray-8 text-sm font-semibold hover:border-stroke focus:ring-1 focus:ring-gray-6 focus:border-gray-6 ${
+          className={`flex gap-1 p-2 border border-gray-8 text-sm font-semibold hover:border-stroke focus:border-gray-6 ${
             pathname === tag.path ? 'bg-gray-9 hover:border-gray-8' : ''
           }`}
           variant="unstyled"

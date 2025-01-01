@@ -30,7 +30,7 @@ export const RadioGroup = ({ options, name, value, onChange }: RadioGroupProps) 
       {options.map((option) => (
         <label
           key={option.value}
-          className={`flex items-center justify-between flex-1 gap-2 px-4 py-[10px] border border-bg-2 bg-gray-10 rounded-4 text-base cursor-pointer ${
+          className={`flex items-center justify-between flex-1 gap-2 px-4 py-[10px] border border-bg-2 bg-gray-10 rounded-4 text-base cursor-pointer transition hover:bg-gray-8 ${
             selectedValue === option.value ? option.activeStyles : ''
           }`}>
           <input

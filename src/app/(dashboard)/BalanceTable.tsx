@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Table } from '@/components/common/Table';
 import { Withdrawal } from '@/components/common/Withdrawal';
 import { CommonTable } from '@/config/types';
@@ -17,7 +18,10 @@ const balanceTable: CommonTable<TableData>[] = [
   {
     title: 'Wallet',
     render: (row) => (
-      <div className="flex items-center gap-1 text-sm text-text-primary">{row.name}</div>
+      <div className="flex items-center gap-2 text-sm text-text-primary">
+        {row.icon && <Image src={row.icon} width={20} height={20} alt={row.name} />}
+        {row.name}
+      </div>
     ),
     width: '20%',
   },

@@ -36,11 +36,11 @@ export const SingleSelect = memo(({ className, data, value, onChange }: Props) =
   return (
     <div className="relative" ref={ref}>
       <button
-        className={`flex items-center justify-between min-w-32 p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:ring-2 focus:ring-gray-6 focus:border-gray-6 ${
+        className={`flex items-center justify-between min-w-32 p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary hover:bg-gray-8 focus:border-gray-6 focus:outline-none ${
           className || ''
         }`}
         onClick={handleSelectClick}>
-        {value || 'Click for select'}
+        <span className="truncate">{value || 'Click for select'}</span>
         <AltArrowDown />
       </button>
 
