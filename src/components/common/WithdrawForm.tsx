@@ -65,10 +65,12 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
         <Controller
           control={control}
           name="network"
+          rules={{ required: 'Choose the network' }}
           render={({ field: { value, onChange } }) => (
             <RadioGroup value={value} options={options} name="Network" onChange={onChange} />
           )}
         />
+        {errors.network && <span className="text-red">{errors.network.message}</span>}
 
         <hr className="border-b-bg-2 border-dashed" />
         <input
@@ -86,25 +88,30 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
         {errors.address && <span className="text-red">{errors.address.message}</span>}
 
         <div className="flex gap-2">
-          <Controller
-            control={control}
-            name="token"
-            render={({ field: { value, onChange } }) => (
-              <SingleSelect
-                className="w-24"
-                data={getDataForSelect(TOKENS)}
-                value={value}
-                onChange={onChange}
-              />
-            )}
-          />
+          <div className="flex flex-col gap-2">
+            <Controller
+              control={control}
+              name="token"
+              rules={{
+                required: 'Choose the token',
+              }}
+              render={({ field: { value, onChange } }) => (
+                <SingleSelect
+                  className="w-24"
+                  data={getDataForSelect(TOKENS)}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+            {errors.token && <span className="text-red">{errors.token.message}</span>}
+          </div>
 
           <div className="flex flex-col gap-2 w-full">
             <input
               className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary transition hover:bg-gray-8 focus:border-gray-6 focus:outline-none"
               autoComplete="off"
               placeholder="Amount"
-              required
               {...register('amount', {
                 required: 'Enter the amount',
                 validate: {

@@ -7,14 +7,15 @@ import { Hyperliquid } from '@/assets/icons';
 
 export const useTags = () => {
   const { connector } = useAccount();
-  const { totalWalletValue, totalHyperliquidValue, totalValue } = useTotalValues();
+  const { isTotalValueLoading, totalWalletValue, totalHyperliquidValue, totalValue } =
+    useTotalValues();
 
   return [
     {
       key: 'balance',
       label: 'Balance',
       path: '/',
-      totalValue: numeral(totalValue).format(DOLLAR_PATTERN),
+      totalValue: isTotalValueLoading ? 'Loading...' : numeral(totalValue).format(DOLLAR_PATTERN),
     },
     {
       key: 'connected-wallet',
@@ -33,7 +34,9 @@ export const useTags = () => {
         </div>
       ),
       path: '/connected-wallet',
-      totalValue: numeral(totalWalletValue).format(DOLLAR_PATTERN),
+      totalValue: isTotalValueLoading
+        ? 'Loading...'
+        : numeral(totalWalletValue).format(DOLLAR_PATTERN),
     },
     {
       key: 'hyperliquid',
@@ -44,7 +47,9 @@ export const useTags = () => {
         </div>
       ),
       path: '/hyperliquid',
-      totalValue: numeral(totalHyperliquidValue).format(DOLLAR_PATTERN),
+      totalValue: isTotalValueLoading
+        ? 'Loading...'
+        : numeral(totalHyperliquidValue).format(DOLLAR_PATTERN),
     },
   ];
 };

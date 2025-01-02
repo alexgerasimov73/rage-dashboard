@@ -7,7 +7,7 @@ import { chainIds, SUPPORTED_TOKENS, tokenIds } from '@/config/constants';
 
 export const useTokenBalances = () => {
   const { address, isConnected } = useAccount();
-  const tokenPrices = useTokenPrices(isConnected, tokenIds.join(','));
+  const { isPricesLoading, tokenPrices } = useTokenPrices(isConnected, tokenIds.join(','));
 
   const balanceQueries = useQueries({
     queries: SUPPORTED_TOKENS.map((token) => ({
@@ -38,6 +38,7 @@ export const useTokenBalances = () => {
   });
 
   return {
+    isTokenBalancesLoading: isPricesLoading,
     tokenBalances,
     totalValue: tokenBalances.reduce((acc, token) => acc + token.usdValue, 0),
   };

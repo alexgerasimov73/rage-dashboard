@@ -28,7 +28,7 @@ export const Tags = () => {
           <span className="text-xs text-text-secondary">
             {typeof tag.label === 'function' ? tag.label() : tag.label}
           </span>
-          <span>${tag.totalValue}</span>
+          <span>{tag.totalValue}</span>
         </Button>
       ))}
     </nav>

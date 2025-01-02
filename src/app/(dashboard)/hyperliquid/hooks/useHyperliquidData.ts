@@ -4,14 +4,14 @@ import { useTokenPrices } from '../../../../hooks/useTokenPrices';
 
 export const useHyperliquidData = () => {
   const { address, isConnected } = useAccount();
-  const tokenBalances = useHyperliquidBalances(address);
+  const { isLoading, hyperliquidData } = useHyperliquidBalances(address);
 
   const coins =
-    tokenBalances?.balances.map((balance) => balance.coin.toLowerCase()).join(',') || '';
-  const tokenPrices = useTokenPrices(isConnected, coins);
+    hyperliquidData?.balances.map((balance) => balance.coin.toLowerCase()).join(',') || '';
+  const { isPricesLoading, tokenPrices } = useTokenPrices(isConnected, coins);
 
-  const hyperliquidData = tokenBalances
-    ? tokenBalances.balances.map((balance) => {
+  const hyperliquidBalances = hyperliquidData
+    ? hyperliquidData.balances.map((balance) => {
         const price = tokenPrices?.[balance.coin.toLowerCase()].usd || 0;
         const amount = Number(balance.total);
         const usdValue = amount * price;
@@ -26,7 +26,8 @@ export const useHyperliquidData = () => {
     : [];
 
   return {
-    hyperliquidData,
-    totalValue: hyperliquidData.reduce((acc, token) => acc + token.usdValue, 0),
+    isHyperliquidLoading: isLoading || isPricesLoading,
+    hyperliquidBalances,
+    totalValue: hyperliquidBalances.reduce((acc, token) => acc + token.usdValue, 0),
   };
 };

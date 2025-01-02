@@ -2,12 +2,13 @@ import { useTokenBalances } from '@/app/(dashboard)/connected-wallet/hooks/useTo
 import { useHyperliquidData } from '@/app/(dashboard)/hyperliquid/hooks/useHyperliquidData';
 
 export const useTotalValues = () => {
-  const { totalValue: totalWalletValue } = useTokenBalances();
-  const { totalValue: totalHyperliquidValue } = useHyperliquidData();
+  const { isTokenBalancesLoading, totalValue: totalWalletValue } = useTokenBalances();
+  const { isHyperliquidLoading, totalValue: totalHyperliquidValue } = useHyperliquidData();
 
   const totalValue = totalWalletValue + totalHyperliquidValue;
 
   return {
+    isTotalValueLoading: isTokenBalancesLoading || isHyperliquidLoading,
     totalWalletValue: totalWalletValue,
     totalHyperliquidValue: totalHyperliquidValue,
     totalValue: totalValue,

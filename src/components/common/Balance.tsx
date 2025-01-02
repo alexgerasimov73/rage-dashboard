@@ -5,9 +5,11 @@ import { useTotalValues } from '@/hooks/useTotalValues';
 import { DOLLAR_PATTERN } from '@/config/constants';
 
 export const Balance = () => {
-  const { totalValue } = useTotalValues();
+  const { isTotalValueLoading, totalValue } = useTotalValues();
 
   return (
-    <span className="text-sm font-semibold">${numeral(totalValue).format(DOLLAR_PATTERN)}</span>
+    <span className="text-sm font-semibold">
+      {isTotalValueLoading ? 'Loading...' : `${numeral(totalValue).format(DOLLAR_PATTERN)}`}
+    </span>
   );
 };

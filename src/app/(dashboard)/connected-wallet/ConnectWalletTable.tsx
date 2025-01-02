@@ -21,7 +21,7 @@ interface TableData {
 const walletTable: CommonTable<TableData>[] = [
   {
     title: 'Asset',
-    render: (row) => <Asset name={row.id} symbol={row.symbol} />,
+    render: (row) => <Asset name={row.id} symbol={`${row.symbol} (${row.chain})`} />,
     width: '30%',
   },
   {
@@ -42,7 +42,10 @@ const walletTable: CommonTable<TableData>[] = [
 ];
 
 export const ConnectWalletTable = () => {
-  const { tokenBalances } = useTokenBalances();
+  const { isTokenBalancesLoading, tokenBalances } = useTokenBalances();
+
+  if (isTokenBalancesLoading)
+    return <div className="flex items-center justify-center w-full my-20">Loading...</div>;
 
   return <Table columns={walletTable} data={tokenBalances} />;
 };

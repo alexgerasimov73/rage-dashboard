@@ -37,14 +37,17 @@ const hyperliquidTable: CommonTable<TableData>[] = [
 ];
 
 export const HyperliquidTable = () => {
-  const { hyperliquidData } = useHyperliquidData();
+  const { isHyperliquidLoading, hyperliquidBalances } = useHyperliquidData();
 
-  if (!hyperliquidData.length)
+  if (isHyperliquidLoading)
+    return <div className="flex items-center justify-center w-full my-20">Loading...</div>;
+
+  if (!hyperliquidBalances.length)
     return (
       <div className="flex items-center justify-center w-full my-20">
         No balances to display. It seems you haven&#39;t used Hyperliquid yet.
       </div>
     );
 
-  return <Table columns={hyperliquidTable} data={hyperliquidData} />;
+  return <Table columns={hyperliquidTable} data={hyperliquidBalances} />;
 };

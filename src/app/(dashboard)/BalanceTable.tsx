@@ -52,7 +52,10 @@ const balanceTable: CommonTable<TableData>[] = [
 ];
 
 export const BalanceTable = () => {
-  const balanceTableData = useBalanceTableData();
+  const { isBalanceTableDataLoading, balanceTableData } = useBalanceTableData();
+
+  if (isBalanceTableDataLoading)
+    return <div className="flex items-center justify-center w-full my-20">Loading...</div>;
 
   return <Table columns={balanceTable} data={balanceTableData} />;
 };
