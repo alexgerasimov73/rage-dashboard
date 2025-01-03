@@ -2,9 +2,9 @@ import numeral from 'numeral';
 import { DOLLAR_PATTERN, TOKEN_PATTERN } from '@/config/constants';
 
 interface Props {
-  readonly balance: number;
-  readonly symbol: string;
-  readonly usdValue: number;
+  readonly balance?: number;
+  readonly symbol?: string;
+  readonly usdValue?: number;
 }
 
 export const Amount = ({ balance, symbol, usdValue }: Props) => (

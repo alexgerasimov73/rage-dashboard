@@ -10,12 +10,13 @@ import { useTokenBalances } from './hooks/useTokenBalances';
 import { DOLLAR_PATTERN } from '@/config/constants';
 
 interface TableData {
-  readonly amount: number;
-  readonly id: string;
-  readonly chain: Network;
-  readonly price: number;
-  readonly symbol: string;
-  readonly usdValue: number;
+  readonly amount?: number;
+  readonly chain?: Network;
+  readonly id?: string;
+  readonly isLoading?: boolean;
+  readonly price?: number;
+  readonly symbol?: string;
+  readonly usdValue?: number;
 }
 
 const walletTable: CommonTable<TableData>[] = [

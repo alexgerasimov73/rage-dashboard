@@ -9,7 +9,7 @@ export const Balance = () => {
 
   return (
     <span className="text-sm font-semibold">
-      {isTotalValueLoading ? 'Loading...' : `${numeral(totalValue).format(DOLLAR_PATTERN)}`}
+      {isTotalValueLoading ? 'Loading...' : `$${numeral(totalValue).format(DOLLAR_PATTERN)}`}
     </span>
   );
 };

@@ -12,19 +12,28 @@ export const useTokenBalances = () => {
   const balanceQueries = useQueries({
     queries: SUPPORTED_TOKENS.map((token) => ({
       queryKey: ['balance', token.address || address, token.network],
-      queryFn: () =>
-        getBalance(getConfig(), {
-          address: token.address || address!,
+      queryFn: () => {
+        if (!address) return;
+
+        return getBalance(getConfig(), {
+          address,
           chainId: chainIds[token.network],
-        }),
+          token: token.address,
+        });
+      },
       enabled: isConnected,
     })),
   });
 
   const tokenBalances = balanceQueries.map(({ data }, index) => {
+    if (!data)
+      return {
+        isLoading: true,
+      };
+
     const token = SUPPORTED_TOKENS[index];
     const price = tokenPrices?.[token.id]?.usd || 0;
-    const amount = data ? Number(data.formatted) : 0;
+    const amount = Number(data.formatted);
     const usdValue = amount * price;
 
     return {
@@ -32,7 +41,7 @@ export const useTokenBalances = () => {
       id: token.id,
       chain: token.network,
       price,
-      symbol: token.symbol,
+      symbol: data.symbol,
       usdValue,
     };
   });
@@ -40,6 +49,6 @@ export const useTokenBalances = () => {
   return {
     isTokenBalancesLoading: isPricesLoading,
     tokenBalances,
-    totalValue: tokenBalances.reduce((acc, token) => acc + token.usdValue, 0),
+    totalValue: tokenBalances.reduce((acc, token) => acc + (token.usdValue || 0), 0),
   };
 };

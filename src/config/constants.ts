@@ -116,3 +116,9 @@ export const SUPPORTED_TOKENS: Token[] = [
     network: Network.ARBITRUM,
   },
 ];
+
+export const networkOptions = [
+  { value: 'Arbitrum', label: 'Arbitrum', activeStyles: 'text-blue border-blue' },
+  { value: 'Optimism', label: 'Optimism', activeStyles: 'text-red border-red' },
+  { value: 'Ethereum', label: 'Ethereum', activeStyles: 'border-white' },
+];

@@ -7,7 +7,7 @@ import { RadioGroup } from './RadioGroup';
 import { SingleSelect } from './SingleSelect';
 import { getDataForSelect } from '@/utils/utils';
 import { Network } from '@/config/types';
-import { TOKENS } from '@/config/constants';
+import { networkOptions, TOKENS } from '@/config/constants';
 // import { parseEther } from 'viem';
 
 interface FormData {
@@ -16,12 +16,6 @@ interface FormData {
   readonly network: Network;
   readonly token: string;
 }
-
-const options = [
-  { value: 'Arbitrum', label: 'Arbitrum', activeStyles: 'text-blue border-blue' },
-  { value: 'Optimism', label: 'Optimism', activeStyles: 'text-red border-red' },
-  { value: 'Ethereum', label: 'Ethereum', activeStyles: 'border-white' },
-];
 
 interface Props {
   readonly availableAmount?: number;
@@ -67,7 +61,7 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
           name="network"
           rules={{ required: 'Choose the network' }}
           render={({ field: { value, onChange } }) => (
-            <RadioGroup value={value} options={options} name="Network" onChange={onChange} />
+            <RadioGroup value={value} options={networkOptions} name="Network" onChange={onChange} />
           )}
         />
         {errors.network && <span className="text-red">{errors.network.message}</span>}
