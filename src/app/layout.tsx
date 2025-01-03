@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
-import './globals.css';
-import { cookieToInitialState } from 'wagmi';
-import { Providers } from './providers';
-import { getConfig } from '@/config/wagmi';
-import type { PropsWithChildren } from 'react';
 import { headers } from 'next/headers';
+import type { PropsWithChildren } from 'react';
+import { cookieToInitialState } from 'wagmi';
+import { Toaster } from 'sonner';
+
+import { Providers } from './providers';
 import { Header } from '@/components/layout/header/Header';
+import { getConfig } from '@/config/wagmi';
+import './globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,6 +34,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <main className="max-w-[1392px] w-full min-h-screen mx-auto pt-[73px] px-2">
             {children}
           </main>
+
+          <Toaster duration={3_000} position="top-right" theme="dark" />
         </Providers>
       </body>
     </html>

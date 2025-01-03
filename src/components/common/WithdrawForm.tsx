@@ -2,7 +2,9 @@
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useAccount, useSendTransaction, useWriteContract } from 'wagmi';
+import type { SendTransactionReturnType, SendTransactionErrorType } from 'wagmi/actions';
 import { isAddress, parseEther, parseUnits } from 'viem';
+import { toast } from 'sonner';
 
 import { Button } from './Button';
 import { RadioGroup } from './RadioGroup';
@@ -42,8 +44,8 @@ export const WithdrawForm = ({ availableAmount, chain, decimals, symbol }: Props
     name: 'token',
   });
   const { address: senderAddress } = useAccount();
-  const { isPending: isSendEthLoading, sendTransaction } = useSendTransaction();
-  const { isPending: isSendErc20Loading, writeContract } = useWriteContract();
+  const { isPending: isSendEthLoading, sendTransactionAsync } = useSendTransaction();
+  const { isPending: isSendErc20Loading, writeContractAsync } = useWriteContract();
 
   const handleFinish = ({ amount, network, recipientAddress, token }: FormData) => {
     if (
@@ -58,22 +60,34 @@ export const WithdrawForm = ({ availableAmount, chain, decimals, symbol }: Props
       return;
 
     if (token === 'ETH') {
-      sendTransaction({
+      sendTransactionAsync({
         chainId: chainIds[network],
         to: recipientAddress,
         value: parseEther(amount),
-      });
+      })
+        .then((hash: SendTransactionReturnType) =>
+          toast.success(`Tokens were successfully sent. Hash: ${hash}`),
+        )
+        .catch((err: SendTransactionErrorType) =>
+          toast.error(`An error has occurred while sending tokens: ${err.message}.`),
+        );
     } else {
       const tokenAddress = getTokenAddress(token, network);
       if (!tokenAddress) return;
 
-      writeContract({
+      writeContractAsync({
         abi,
         address: tokenAddress,
         chainId: chainIds[network],
         functionName: 'transferFrom',
         args: [senderAddress, recipientAddress, parseUnits(amount, decimals)],
-      });
+      })
+        .then((hash: SendTransactionReturnType) =>
+          toast.success(`Tokens were successfully sent. Hash: ${hash}`),
+        )
+        .catch((err: SendTransactionErrorType) =>
+          toast.error(`An error has occurred while sending tokens: ${err.message}.`),
+        );
     }
   };
 
