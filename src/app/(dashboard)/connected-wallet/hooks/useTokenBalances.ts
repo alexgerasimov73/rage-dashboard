@@ -1,7 +1,8 @@
 import { useAccount } from 'wagmi';
 import { getBalance } from 'wagmi/actions';
-import { getConfig } from '@/config/wagmi';
+import { formatUnits } from 'viem';
 import { useQueries } from '@tanstack/react-query';
+import { getConfig } from '@/config/wagmi';
 import { useTokenPrices } from '../../../../hooks/useTokenPrices';
 import { chainIds, SUPPORTED_TOKENS, tokenIds } from '@/config/constants';
 
@@ -33,13 +34,14 @@ export const useTokenBalances = () => {
 
     const token = SUPPORTED_TOKENS[index];
     const price = tokenPrices?.[token.id]?.usd || 0;
-    const amount = Number(data.formatted);
+    const amount = Number(formatUnits(data.value, data.decimals));
     const usdValue = amount * price;
 
     return {
       amount,
       id: token.id,
       chain: token.network,
+      decimals: data.decimals,
       price,
       symbol: data.symbol,
       usdValue,

@@ -16,10 +16,11 @@ import { Network } from '@/config/types';
 interface Props {
   readonly amount?: number;
   readonly chain?: Network;
+  readonly decimals?: number;
   readonly symbol?: string;
 }
 
-export const Withdrawal = ({ amount, chain, symbol }: Props) => (
+export const Withdrawal = ({ amount, chain, decimals, symbol }: Props) => (
   <Root>
     <Trigger asChild>
       <Button className="w-full text-xxs font-semibold" variant="secondary">
@@ -35,7 +36,7 @@ export const Withdrawal = ({ amount, chain, symbol }: Props) => (
           <Description />
         </VisuallyHidden.Root>
 
-        <WithdrawForm availableAmount={amount} chain={chain} symbol={symbol} />
+        <WithdrawForm availableAmount={amount} chain={chain} decimals={decimals} symbol={symbol} />
         <Close asChild>
           <Button className="absolute top-2 right-2 px-0 text-lg text-gray-icon" variant="unstyled">
             ✕

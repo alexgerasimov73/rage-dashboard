@@ -1,18 +1,20 @@
 'use client';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
-// import { type BaseError, useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useSendTransaction, useWriteContract } from 'wagmi';
+import { isAddress, parseEther, parseUnits } from 'viem';
+
 import { Button } from './Button';
 import { RadioGroup } from './RadioGroup';
 import { SingleSelect } from './SingleSelect';
-import { getDataForSelect } from '@/utils/utils';
+import { getDataForSelect, getTokenAddress } from '@/utils/utils';
 import { Network } from '@/config/types';
-import { networkOptions, TOKENS } from '@/config/constants';
-// import { parseEther } from 'viem';
+import { chainIds, networkOptions, TOKENS } from '@/config/constants';
+import { abi } from '@/config/abi';
 
 interface FormData {
-  readonly address: string;
   readonly amount: string;
+  readonly recipientAddress: string;
   readonly network: Network;
   readonly token: string;
 }
@@ -20,10 +22,11 @@ interface FormData {
 interface Props {
   readonly availableAmount?: number;
   readonly chain?: Network;
+  readonly decimals?: number;
   readonly symbol?: string;
 }
 
-export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
+export const WithdrawForm = ({ availableAmount, chain, decimals, symbol }: Props) => {
   const {
     control,
     handleSubmit,
@@ -38,17 +41,40 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
     control,
     name: 'token',
   });
-  // const { data: hash, error, isPending, sendTransaction } = useSendTransaction();
-  // const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
-  //   hash,
-  // });
+  const { address: senderAddress } = useAccount();
+  const { isPending: isSendEthLoading, sendTransaction } = useSendTransaction();
+  const { isPending: isSendErc20Loading, writeContract } = useWriteContract();
 
-  const handleFinish = ({ address, amount, network, token }: FormData) => {
-    console.log('address', address);
-    console.log('amount', amount);
-    console.log('network', network);
-    console.log('token', token);
-    // sendTransaction({ to: address, value: parseEther(amount) });
+  const handleFinish = ({ amount, network, recipientAddress, token }: FormData) => {
+    if (
+      !amount ||
+      !decimals ||
+      !network ||
+      !recipientAddress ||
+      !senderAddress ||
+      !token ||
+      !isAddress(recipientAddress)
+    )
+      return;
+
+    if (token === 'ETH') {
+      sendTransaction({
+        chainId: chainIds[network],
+        to: recipientAddress,
+        value: parseEther(amount),
+      });
+    } else {
+      const tokenAddress = getTokenAddress(token, network);
+      if (!tokenAddress) return;
+
+      writeContract({
+        abi,
+        address: tokenAddress,
+        chainId: chainIds[network],
+        functionName: 'transferFrom',
+        args: [senderAddress, recipientAddress, parseUnits(amount, decimals)],
+      });
+    }
   };
 
   return (
@@ -71,7 +97,7 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
           className="w-full p-3 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary transition hover:bg-gray-8 focus:border-gray-6 focus:outline-none"
           placeholder="Address"
           autoComplete="off"
-          {...register('address', {
+          {...register('recipientAddress', {
             required: 'Address is required',
             pattern: {
               value: /^0x[a-fA-F0-9]{40}$/,
@@ -79,7 +105,9 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
             },
           })}
         />
-        {errors.address && <span className="text-red">{errors.address.message}</span>}
+        {errors.recipientAddress && (
+          <span className="text-red">{errors.recipientAddress.message}</span>
+        )}
 
         <div className="flex gap-2">
           <div className="flex flex-col gap-2">
@@ -124,7 +152,10 @@ export const WithdrawForm = ({ availableAmount, chain, symbol }: Props) => {
         <div className="flex justify-center py-2 rounded-4 border border-bg-2 bg-gray-10 text-base text-secondary">
           Available {availableAmount ?? '...'}
         </div>
-        <Button className="w-full mt-2" type="submit">
+        <Button
+          className="w-full mt-2"
+          disabled={isSendEthLoading || isSendErc20Loading}
+          type="submit">
           {watchedAmount ? `Withdraw ${watchedToken} ${watchedAmount}` : 'Withdraw'}
         </Button>
       </form>

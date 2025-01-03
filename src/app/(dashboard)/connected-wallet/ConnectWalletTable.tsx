@@ -12,6 +12,7 @@ import { DOLLAR_PATTERN } from '@/config/constants';
 interface TableData {
   readonly amount?: number;
   readonly chain?: Network;
+  readonly decimals?: number;
   readonly id?: string;
   readonly isLoading?: boolean;
   readonly price?: number;
@@ -37,7 +38,14 @@ const walletTable: CommonTable<TableData>[] = [
   },
   {
     title: '',
-    render: (row) => <Withdrawal amount={row.amount} chain={row.chain} symbol={row.symbol} />,
+    render: (row) => (
+      <Withdrawal
+        amount={row.amount}
+        decimals={row.decimals}
+        chain={row.chain}
+        symbol={row.symbol}
+      />
+    ),
     width: '25%',
   },
 ];
