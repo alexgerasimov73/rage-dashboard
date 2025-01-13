@@ -23,7 +23,7 @@ interface TableData {
 const walletTable: CommonTable<TableData>[] = [
   {
     title: 'Asset',
-    render: (row) => <Asset name={row.id} symbol={`${row.symbol} (${row.chain})`} />,
+    render: (row) => <Asset chain={row.chain} name={row.id} symbol={row.symbol || ''} />,
     width: '30%',
   },
   {

@@ -1,5 +1,5 @@
-import { LogoIcon, LogoText } from '@/assets/icons';
 import Image from 'next/image';
+import { LogoIcon, LogoText } from '@/assets/icons';
 
 export const Logo = () => (
   <div className="flex items-center gap-6">

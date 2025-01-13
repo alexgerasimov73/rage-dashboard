@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { Address } from 'viem';
 import { COINGECKO_API_URL, HYPERLIQUID_API_URL, SUPPORTED_TOKENS } from '@/config/constants';
 import { HyperliquidSpot, Network } from '@/config/types';
+import { ARB, ETH, LINK, SOL, UNI, USDC, USDT, WBTC, WETH } from '@/assets/icons';
 
 export const truncateAddress = (address: Address, chars = 4): string =>
   `${address.slice(0, chars)}...${address.slice(-chars)}`;
@@ -49,4 +50,29 @@ export const fetchHyperliquidBalances = async (
 export const getTokenAddress = (symbol: string, network: Network) => {
   return SUPPORTED_TOKENS.find((token) => token.symbol === symbol && token.network === network)
     ?.address;
+};
+
+export const logoFor = (attribute: string) => {
+  switch (attribute) {
+    case 'ETH':
+      return ETH;
+    case 'USDC':
+      return USDC;
+    case 'WBTC':
+      return WBTC;
+    case 'WETH':
+      return WETH;
+    case 'LINK':
+      return LINK;
+    case 'UNI':
+      return UNI;
+    case 'USDT':
+      return USDT;
+    case 'ARB':
+      return ARB;
+    case 'SOL':
+      return SOL;
+    default:
+      return undefined;
+  }
 };
